@@ -20,11 +20,20 @@ You can download the pre-trained models from Baidu Netdisk:
 ### LOL-v1 Dataset
 <img width="700" height="313" alt="image" src="https://github.com/user-attachments/assets/801a8d4a-4ace-4edb-acb4-18574af7588e" />
 
-## Environment
 
+## Installation
+
+Please run the following commands to create the environment and install dependencies:
+
+# 1. Create a conda environment
 conda create -n py38 python=3.8
+
+# 2. Activate the environment
 conda activate py38
+
+# 3. Install dependencies
 pip install -r requirements.txt
+
 
 ## Run
 ### Test
