@@ -85,9 +85,9 @@ def validate(model, dataloader, device, result_dir):
 
 def main():
     # Paths and device setup
-    test_low = '/home/zhanghuijie/work/LYT-Net-main-14-1-gan-gan-4/PyTorch/data/SDSD_indoor_png/eval/low'
-    test_high = '/home/zhanghuijie/work/LYT-Net-main-14-1-gan-gan-4/PyTorch/data/SDSD_indoor_png/eval/high'
-    weights_path = '/home/zhanghuijie/work/LYT-Net-main-14-1-gan-gan-4/best_14_1_gan_gan_sdindoor_4.pth'
+    test_low = ''
+    test_high = ''
+    weights_path = ''
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     dataset_name = "deflare_sdindoor_unet14"
