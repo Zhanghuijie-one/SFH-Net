@@ -1,6 +1,6 @@
 # SFH-Net:Enhancing Low-Light Images through HVI Color Space with Spatial-Frequency Domain Integration
 
-These codes are directly related to the current manuscript submitted to The Visual Computer:Enhancing Low-Light Images through HVI Color Space with Spatial-Frequency Domain Integration
+This code is the official implementation of the paper submitted to The Visual Computer: "Enhancing Low-Light Images through HVI Color Space with Spatial-Frequency Domain Integration"
 
 ## Datasets
 
