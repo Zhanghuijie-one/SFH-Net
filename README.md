@@ -6,14 +6,14 @@ These codes are directly related to the current manuscript submitted to The Visu
 
 Please download the datasets and place them in the `./data` folder.
 
-- **Link:** [Click here to download](https://pan.baidu.com/s/1iu-BCr9XarNMJTMKY1keZw)
+- **Link:** [Baidu Cloud](https://pan.baidu.com/s/1iu-BCr9XarNMJTMKY1keZw)
 - **Access Code:** `dat3`
 
 
 ## Pre-trained Models
 
 You can download the pre-trained models from Baidu Netdisk:
-- **Link:** [Click here to download](https://pan.baidu.com/s/1jzKZ5QQc7A4iHOvNj6OIRQ)
+- **Link:** [Baidu Cloud](https://pan.baidu.com/s/1jzKZ5QQc7A4iHOvNj6OIRQ)
 - **Access Code:** `pth1`
 
 
