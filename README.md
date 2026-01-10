@@ -26,10 +26,21 @@ You can download the pre-trained models from Baidu Netdisk:
 Please run the following commands to create the environment and install dependencies:
 
 ### 1. Create a conda environment
+```bash
 conda create -n py38 python=3.8
-
+```
 ### 2. Activate the environment
+```bash
 conda activate py38
+```
+### 3. Install Dependencies
+```bash
+conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+
+pip install matplotlib scikit-learn scikit-image opencv-python yacs joblib natsort h5py tqdm tensorboard
+
+pip install einops gdown addict future lmdb numpy pyyaml requests scipy yapf lpips thop timm torchmetrics pytorch_msssim
+```
 
 ## Run
 ### Test
