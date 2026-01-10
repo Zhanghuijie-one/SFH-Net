@@ -25,13 +25,13 @@ You can download the pre-trained models from Baidu Netdisk:
 
 Please run the following commands to create the environment and install dependencies:
 
-# 1. Create a conda environment
+### 1. Create a conda environment
 conda create -n py38 python=3.8
 
-# 2. Activate the environment
+### 2. Activate the environment
 conda activate py38
 
-# 3. Install dependencies
+### 3. Install dependencies
 pip install -r requirements.txt
 
 
