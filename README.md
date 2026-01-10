@@ -31,10 +31,6 @@ conda create -n py38 python=3.8
 ### 2. Activate the environment
 conda activate py38
 
-### 3. Install dependencies
-pip install -r requirements.txt
-
-
 ## Run
 ### Test
 python test.py
