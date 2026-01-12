@@ -85,9 +85,9 @@ def validate(model, dataloader, device, result_dir):
 
 def main():
     # Paths and device setup
-    test_low = ''
-    test_high = ''
-    weights_path = ''
+    test_low = './images/LOLv1/Test/input'
+    test_high = './images/LOLv1/Test/target'
+    weights_path = 'lolv1.pt'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     dataset_name = "deflare_sdindoor_unet14"
