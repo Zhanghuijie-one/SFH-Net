@@ -44,8 +44,9 @@ pip install einops gdown addict future lmdb numpy pyyaml requests scipy yapf lpi
 
 ## Run
 ### Test
+```bash
 python test.py
-
+```
 
 
 
