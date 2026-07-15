@@ -181,27 +181,30 @@ def load_model(args, device):
 
 # ================== Validation ==================
 
-def validate(model, dataloader, device, result_dir, lpips_model, save_images=True):
+# ================== Validation ==================
+
+def validate(
+    model,
+    dataloader,
+    device,
+    result_dir,
+    lpips_model,
+    save_images=True,
+):
+    """
+    Evaluate only after GT-mean brightness correction.
+    """
     model.eval()
 
-    total_normal_psnr = 0.0
-    total_normal_ssim = 0.0
-    total_normal_lpips = 0.0
-    total_normal_ciede = 0.0
-
-    total_gtmean_psnr = 0.0
-    total_gtmean_ssim = 0.0
-    total_gtmean_lpips = 0.0
-    total_gtmean_ciede = 0.0
+    total_psnr = 0.0
+    total_ssim = 0.0
+    total_lpips = 0.0
+    total_ciede = 0.0
 
     count = 0
 
-    normal_result_dir = os.path.join(result_dir, "normal")
-    gtmean_result_dir = os.path.join(result_dir, "gt_mean")
-
     if save_images:
-        os.makedirs(normal_result_dir, exist_ok=True)
-        os.makedirs(gtmean_result_dir, exist_ok=True)
+        os.makedirs(result_dir, exist_ok=True)
 
     with torch.no_grad():
         for idx, (low, high) in enumerate(dataloader):
@@ -209,82 +212,61 @@ def validate(model, dataloader, device, result_dir, lpips_model, save_images=Tru
             high = torch.clamp(high, 0, 1).to(device)
 
             output = model(low)
+
             if isinstance(output, (tuple, list)):
                 output = output[0]
+
             output = torch.clamp(output, 0, 1)
 
+            # Apply GT-mean brightness correction
             output_gtmean = apply_gt_mean_correction(output, high)
 
             if save_images:
                 save_image(
-                    output,
-                    os.path.join(normal_result_dir, f"result_{idx}.png"),
-                )
-
-                save_image(
                     output_gtmean,
-                    os.path.join(gtmean_result_dir, f"result_{idx}.png"),
+                    os.path.join(result_dir, f"result_{idx}.png"),
                 )
 
-            # Normal metrics
-            normal_psnr = calculate_psnr(output, high)
-            normal_ssim = calculate_ssim(output, high)
-            normal_lpips = calculate_lpips(output, high, lpips_model)
-            normal_ciede = calculate_ciede2000(output, high)
-
-            # GT-mean metrics
-            gtmean_psnr = calculate_psnr(output_gtmean, high)
-            gtmean_ssim = calculate_ssim(output_gtmean, high)
-            gtmean_lpips = calculate_lpips(output_gtmean, high, lpips_model)
-            gtmean_ciede = calculate_ciede2000(output_gtmean, high)
+            # Compute metrics only on GT-mean corrected output
+            psnr = calculate_psnr(output_gtmean, high)
+            ssim = calculate_ssim(output_gtmean, high)
+            lpips_value = calculate_lpips(
+                output_gtmean,
+                high,
+                lpips_model,
+            )
+            ciede = calculate_ciede2000(output_gtmean, high)
 
             print(
-                f"[{idx}] Normal | "
-                f"PSNR: {normal_psnr:.4f} | "
-                f"SSIM: {normal_ssim:.4f} | "
-                f"LPIPS: {normal_lpips:.4f} | "
-                f"CIEDE: {normal_ciede:.4f}"
+                f"[{idx}] GT-mean | "
+                f"PSNR: {psnr:.4f} | "
+                f"SSIM: {ssim:.4f} | "
+                f"LPIPS: {lpips_value:.4f} | "
+                f"CIEDE2000: {ciede:.4f}"
             )
-
-            print(
-                f"[{idx}] GTMean | "
-                f"PSNR: {gtmean_psnr:.4f} | "
-                f"SSIM: {gtmean_ssim:.4f} | "
-                f"LPIPS: {gtmean_lpips:.4f} | "
-                f"CIEDE: {gtmean_ciede:.4f}"
-            )
-
             print("-" * 120)
 
-            total_normal_psnr += normal_psnr
-            total_normal_ssim += normal_ssim
-            total_normal_lpips += normal_lpips
-            total_normal_ciede += normal_ciede
-
-            total_gtmean_psnr += gtmean_psnr
-            total_gtmean_ssim += gtmean_ssim
-            total_gtmean_lpips += gtmean_lpips
-            total_gtmean_ciede += gtmean_ciede
+            total_psnr += psnr
+            total_ssim += ssim
+            total_lpips += lpips_value
+            total_ciede += ciede
 
             count += 1
 
+    if count == 0:
+        raise RuntimeError(
+            "No test samples were found. "
+            "Please check --test_low and --test_high."
+        )
+
     avg_metrics = {
-        "normal": {
-            "psnr": total_normal_psnr / count,
-            "ssim": total_normal_ssim / count,
-            "lpips": total_normal_lpips / count,
-            "ciede": total_normal_ciede / count,
-        },
-        "gt_mean": {
-            "psnr": total_gtmean_psnr / count,
-            "ssim": total_gtmean_ssim / count,
-            "lpips": total_gtmean_lpips / count,
-            "ciede": total_gtmean_ciede / count,
-        },
+        "psnr": total_psnr / count,
+        "ssim": total_ssim / count,
+        "lpips": total_lpips / count,
+        "ciede": total_ciede / count,
     }
 
     return avg_metrics
-
 
 # ================== Main ==================
 
@@ -371,7 +353,11 @@ def main():
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    result_dir = os.path.join(args.result_root, args.dataset_name)
+    result_dir = os.path.join(
+    args.result_root,
+    args.dataset_name,
+    "gt_mean",
+)
     os.makedirs(result_dir, exist_ok=True)
 
     print("=" * 100)
@@ -413,17 +399,23 @@ def main():
         save_images=(not args.no_save_images),
     )
 
-    print("\n===== Final Results: without GT-mean correction =====")
-    print(f"PSNR:  {avg_metrics['normal']['psnr']:.6f}   higher is better")
-    print(f"SSIM:  {avg_metrics['normal']['ssim']:.6f}   higher is better")
-    print(f"LPIPS: {avg_metrics['normal']['lpips']:.6f}  lower is better")
-    print(f"CIEDE: {avg_metrics['normal']['ciede']:.6f}  lower is better")
-
     print("\n===== Final Results: with GT-mean correction =====")
-    print(f"PSNR:  {avg_metrics['gt_mean']['psnr']:.6f}   higher is better")
-    print(f"SSIM:  {avg_metrics['gt_mean']['ssim']:.6f}   higher is better")
-    print(f"LPIPS: {avg_metrics['gt_mean']['lpips']:.6f}  lower is better")
-    print(f"CIEDE: {avg_metrics['gt_mean']['ciede']:.6f}  lower is better")
+    print(
+        f"PSNR:      {avg_metrics['psnr']:.6f}  "
+        f"higher is better"
+    )
+    print(
+        f"SSIM:      {avg_metrics['ssim']:.6f}  "
+        f"higher is better"
+    )
+    print(
+        f"LPIPS:     {avg_metrics['lpips']:.6f}  "
+        f"lower is better"
+    )
+    print(
+        f"CIEDE2000: {avg_metrics['ciede']:.6f}  "
+        f"lower is better"
+    )
 
 
 if __name__ == "__main__":
