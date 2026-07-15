@@ -43,9 +43,14 @@ pip install einops gdown addict future lmdb numpy pyyaml requests scipy yapf lpi
 ```
 
 ## Run
+### Train
+```bash
+python train.py --save_name ablation_full_default.pth
+```
+
 ### Test
 ```bash
-python test.py
+python test_metrics.py --weights_path ablation_full_default.pth --dataset_name FRB_full_cdmFRB_full_r0.1_seed1234 --frb_mode full --cdm_frb_mode full --freq_mask_ratio 0.1
 ```
 
 
