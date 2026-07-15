@@ -41,6 +41,14 @@ pip install matplotlib scikit-learn scikit-image opencv-python yacs joblib natso
 
 pip install einops gdown addict future lmdb numpy pyyaml requests scipy yapf lpips thop timm torchmetrics pytorch_msssim
 ```
+## Training Configuration
+- Epochs: 1000
+- Warm-up epochs: 40
+- Batch size: 2
+- Optimizer: Adam
+- Learning rate: 2e-4
+- Scheduler: CosineAnnealingLR
+- Random seed: 1234
 
 ## Run
 ### Train
