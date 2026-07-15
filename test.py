@@ -33,7 +33,7 @@ def calculate_psnr(img1, img2, max_pixel_value=1.0, gt_mean=True):
     psnr = 20 * torch.log10(max_pixel_value / torch.sqrt(mse))
     return psnr.item()
 
-def calculate_ssim(img1, img2, max_pixel_value=1.0, gt_mean=False):
+def calculate_ssim(img1, img2, max_pixel_value=1.0, gt_mean=True):
     """
     Calculate SSIM (Structural Similarity Index) between two images.
 
