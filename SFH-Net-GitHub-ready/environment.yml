@@ -1,0 +1,19 @@
+name: sfhnet
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+dependencies:
+  - python=3.9.21
+  - pytorch=2.5.1
+  - torchvision=0.20.1
+  - pytorch-cuda=11.8
+  - numpy
+  - pillow
+  - pip
+  - pip:
+      - einops
+      - huggingface-hub
+      - pytorch-msssim
+      - torchmetrics
+      - torchprofile
