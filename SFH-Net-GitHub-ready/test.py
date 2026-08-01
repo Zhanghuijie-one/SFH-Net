@@ -207,13 +207,13 @@ def parse_args():
     parser.add_argument(
         "--test_low",
         type=str,
-        default="/home/zhanghuijie/work/LYT-Net-main-14-1-gan-gan-4/PyTorch/data/LOLv1/Test/input"
+        default=""
     )
 
     parser.add_argument(
         "--test_high",
         type=str,
-        default="/home/zhanghuijie/work/LYT-Net-main-14-1-gan-gan-4/PyTorch/data/LOLv1/Test/target"
+        default=""
     )
 
     parser.add_argument(
